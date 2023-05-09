@@ -1,23 +1,22 @@
 package org.example.Hashmap;
 
-import java.util.Objects;
 
-public class Value {
+public class Value<T extends Comparable<T>> implements Comparable<Key<T>>{
 
     //variables
-    private int value;
+    private T value;
 
     //constructor
-    public Value(int value){
+    public Value(T value){
         this.value = value;
     }
 
     //methods
-    public int getValue(){
+    public T getValue(){
         return value;
     }
 
-    public void setValue(int value){
+    public void setValue(T value){
         this.value = value;
     }
 
@@ -29,4 +28,8 @@ public class Value {
         return value == value1.value;
     }
 
+    @Override
+    public int compareTo (Key<T> o) {
+        return this.value.compareTo(o.getValue());
+    }
 }

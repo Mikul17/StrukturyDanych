@@ -4,7 +4,7 @@ package org.example;
 public class LinkedList <T>{
 
     private class Node{
-        private T data;
+        private final T data;
         private Node next;
         private Node prev;
 
