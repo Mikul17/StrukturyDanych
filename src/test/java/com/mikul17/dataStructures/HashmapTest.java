@@ -56,7 +56,7 @@ public class HashmapTest {
         assertEquals(1, map.size());
     }
     @Test
-    public void testPutKeyIsClassType() {
+    public void testPutKeyIsClassInstance() {
         Hashmap<TestClass, Integer> map = new Hashmap<>();
         TestClass testClass = new TestClass();
         map.put(testClass, 3);
@@ -171,7 +171,7 @@ public class HashmapTest {
         assertThrows(IllegalArgumentException.class, () -> map.remove(null));
     }
     @Test
-    public void testRemoveOutOfBounds() {
+    public void testRemoveNonExistingKey(){
         Hashmap<String, Integer> map = new Hashmap<>();
         map.put("a", 1);
         map.put("b", 2);
