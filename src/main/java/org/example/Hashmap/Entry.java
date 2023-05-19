@@ -1,22 +1,40 @@
 package org.example.Hashmap;
 
-public class Entry <T1 extends Comparable<T1>,T2 extends Comparable<T2>>{
-    private final Key<T1> key;
-    private final Value<T2> value;
 
-    public Entry (Key<T1> key, Value<T2> value) {
+import java.util.Objects;
+
+public class Entry <K, V>{
+    private final K key;
+    public V value;
+    public Entry<K,V> next;
+
+
+
+    public Entry(K key, V value){
         this.key = key;
         this.value = value;
+        next = null;
+    }
+    @SuppressWarnings("unused")
+    public Entry(K key, V value, Entry<K,V> next) {
+        this.key = key;
+        this.value = value;
+        this.next = next;
     }
 
-    public Key getKey() {
+    public final K getKey() {
         return key;
     }
 
-    public Value getValue() {
-        return value;
+
+
+
+    @Override
+    public boolean equals (Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entry<?, ?> entry = (Entry<?, ?>) o;
+        return Objects.equals(key, entry.key) && Objects.equals(value, entry.value) && Objects.equals(next, entry.next);
     }
 
-    public void setValue (Value value) {
-    }
 }
