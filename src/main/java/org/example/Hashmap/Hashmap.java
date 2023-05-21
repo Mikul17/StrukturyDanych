@@ -186,6 +186,20 @@ public class Hashmap<K,V> implements Map<K,V> {
     public int getNumberOfHashCollisions(){
         return numberOfHashCollisions;
     }
+    public boolean containsKey (K key) {
+        if(key == null){
+            throw new IllegalArgumentException("Key cannot be null");
+        }
+        int index = hashCode(key) % hashMap.length;
+        Entry<K, V> entry = hashMap[index];
+        while (entry != null) {
+            if (entry.getKey().equals(key)) {
+                return true;
+            }
+            entry = entry.next;
+        }
+        return false;
+    }
 
     //Hash functions
 //    public int hashCode(K key){
@@ -203,6 +217,7 @@ public class Hashmap<K,V> implements Map<K,V> {
         }
         return Math.abs(hash);
     }
+
 
 //    public int hashCode (K key) {
 //        int hash;

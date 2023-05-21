@@ -179,4 +179,23 @@ public class HashmapTest {
         assertEquals(2, map.size());
         assertEquals(4, map.getCapacity());
     }
+    //containsKey tests
+    @Test
+    public void testContainsKey() {
+        Hashmap<String, Integer> map = new Hashmap<>();
+        map.put("a", 1);
+        assertTrue(map.containsKey("a"));
+    }
+    @Test
+    public void testContainsKeyNullKey() {
+        Hashmap<String, Integer> map = new Hashmap<>();
+        map.put("a", 1);
+        assertThrows(IllegalArgumentException.class, () -> map.containsKey(null));
+    }
+    @Test
+    public void testContainsKeyNonExistingKey() {
+        Hashmap<String, Integer> map = new Hashmap<>();
+        map.put("a", 1);
+        assertFalse(map.containsKey("b"));
+    }
 }

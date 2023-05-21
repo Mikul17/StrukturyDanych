@@ -4,6 +4,7 @@ import org.example.Hashmap.Entry;
 import org.example.Hashmap.Hashmap;
 import org.example.LinkedList;
 import org.example.Map;
+import org.example.SortingAlgorithm;
 
 public class LinkedHashMap<K, V> implements Map<K, V> {
     private final int INITIAL_CAPACITY = 16;
@@ -71,19 +72,295 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
     public int entryListSize(){
         return entryList.size();
     }
-
+    public boolean containsKey(K key){
+        return map.containsKey(key);
+    }
 
 
     //Sorting algorithms
-    public void sortByKey(){
-        for(int i = 0; i < entryList.size(); i++){
-            for(int j = 0; j < entryList.size() - 1; j++){
-                if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) > 0){
-                    Entry<K, V> temp = entryList.get(j);
-                    entryList.set(entryList.get(j + 1),j);
-                    entryList.set(temp, j + 1);
+    public void sort(SortingAlgorithm algorithm, boolean sortByKey, boolean ascending){
+        switch(algorithm){
+            case quickSort:
+                quicksort(0, entryList.size() - 1,sortByKey, ascending);
+                break;
+            case mergeSort:
+                mergeSort(0, entryList.size() - 1, sortByKey, ascending);
+                break;
+            case shellSort:
+                shellSort(sortByKey, ascending);
+                break;
+            case insertionSort:
+                insertionSort(sortByKey, ascending);
+                break;
+            case bubbleSort:
+                bubbleSort(sortByKey, ascending);
+                break;
+            default:
+                System.out.println("Invalid sorting algorithm");
+        }
+    }
+
+
+    //quicksort
+    public void quicksort(int low, int high, boolean sortByKey, boolean ascending){
+        if(low < high){
+            int pi = partition(low, high, sortByKey, ascending);
+            quicksort(low, pi - 1, sortByKey, ascending);
+            quicksort(pi + 1, high, sortByKey, ascending);
+        }
+    }
+
+    public int partition(int low, int high, boolean sortByKey, boolean ascending){
+        Entry<K, V> pivot = entryList.get(high);
+        int i = low - 1;
+
+        if(ascending){
+            if(sortByKey){
+                for(int j = low; j < high; j++){
+                    if(entryList.get(j).getKey().toString().compareTo(pivot.getKey().toString()) < 0){
+                        i++;
+                        Entry<K, V> temp = entryList.get(i);
+                        entryList.set(entryList.get(j), i);
+                        entryList.set(temp, j);
+                    }
+                }
+            }else{
+                for(int j = low; j < high; j++){
+                    if(entryList.get(j).value.toString().compareTo(pivot.value.toString()) < 0){
+                        i++;
+                        Entry<K, V> temp = entryList.get(i);
+                        entryList.set(entryList.get(j), i);
+                        entryList.set(temp, j);
+                    }
+                }
+            }
+        }else{
+            if(sortByKey){
+                for(int j = low; j < high; j++){
+                    if(entryList.get(j).getKey().toString().compareTo(pivot.getKey().toString()) > 0){
+                        i++;
+                        Entry<K, V> temp = entryList.get(i);
+                        entryList.set(entryList.get(j), i);
+                        entryList.set(temp, j);
+                    }
+                }
+            }else{
+                for(int j = low; j < high; j++){
+                    if(entryList.get(j).value.toString().compareTo(pivot.value.toString()) > 0){
+                        i++;
+                        Entry<K, V> temp = entryList.get(i);
+                        entryList.set(entryList.get(j), i);
+                        entryList.set(temp, j);
+                    }
                 }
             }
         }
+        Entry<K, V> temp = entryList.get(i + 1);
+        entryList.set(entryList.get(high), i + 1);
+        entryList.set(temp, high);
+        return i + 1;
+    }
+
+    //mergesort
+    private void mergeSort(int low, int high, boolean sortByKey, boolean ascending){
+            if(low < high){
+                int mid = (low + high) / 2;
+                mergeSort(low, mid, sortByKey, ascending);
+                mergeSort(mid + 1, high, sortByKey, ascending);
+                merge(low, mid, high, sortByKey, ascending);
+            }
+    }
+
+    private void merge(int low, int mid, int high, boolean sortByKey, boolean ascending) {
+        int n1 = mid - low + 1;
+        int n2 = high - mid;
+        Entry<K, V>[] L = new Entry[n1];
+        Entry<K, V>[] R = new Entry[n2];
+        for (int i = 0; i < n1; i++) {
+            L[i] = entryList.get(low + i);
+        }
+        for (int j = 0; j < n2; j++) {
+            R[j] = entryList.get(mid + 1 + j);
+        }
+        int i = 0, j = 0;
+        int k = low;
+        while (i < n1 && j < n2) {
+            if (sortByKey) {
+                if (ascending) {
+                    if (L[i].getKey().toString().compareTo(R[j].getKey().toString()) <= 0) {
+                        entryList.set(L[i],k);
+                        i++;
+                    } else {
+                        entryList.set(R[j],k);
+                        j++;
+                    }
+                } else {
+                    if (L[i].getKey().toString().compareTo(R[j].getKey().toString()) >= 0) {
+                        entryList.set(L[i],k);
+                        i++;
+                    } else {
+                        entryList.set(R[j],k);
+                        j++;
+                    }
+                }
+            } else {
+                if (ascending) {
+                    if (L[i].value.toString().compareTo(R[j].value.toString()) <= 0) {
+                        entryList.set(L[i],k);
+                        i++;
+                    } else {
+                        entryList.set(R[j],k);
+                        j++;
+                    }
+                } else {
+                    if (L[i].value.toString().compareTo(R[j].value.toString()) >= 0) {
+                        entryList.set(L[i],k);
+                        i++;
+                    } else {
+                        entryList.set(R[j],k);
+                        j++;
+                    }
+                }
+            }
+            k++;
+        }
+        while (i < n1) {
+            entryList.set(L[i],k);
+            i++;
+            k++;
+        }
+        while (j < n2) {
+            entryList.set(R[j],k);
+            j++;
+            k++;
+        }
+    }
+
+    //shell-sort
+    private void shellSort(boolean sortByKey, boolean ascending){
+        int n = entryList.size();
+        for(int gap = n/2; gap > 0; gap /= 2){
+            for(int i = gap; i < n; i++){
+                Entry<K, V> temp = entryList.get(i);
+                int j;
+                if(sortByKey){
+                    if(ascending){
+                        for(j = i; j >= gap && entryList.get(j - gap).getKey().toString().compareTo(temp.getKey().toString()) > 0; j -= gap){
+                            entryList.set(entryList.get(j - gap), j);
+                        }
+                    }else{
+                        for(j = i; j >= gap && entryList.get(j - gap).getKey().toString().compareTo(temp.getKey().toString()) < 0; j -= gap){
+                            entryList.set(entryList.get(j - gap), j);
+                        }
+                    }
+                }else{
+                    if(ascending){
+                        for(j = i; j >= gap && entryList.get(j - gap).value.toString().compareTo(temp.value.toString()) > 0; j -= gap){
+                            entryList.set(entryList.get(j - gap), j);
+                        }
+                    }else{
+                        for(j = i; j >= gap && entryList.get(j - gap).value.toString().compareTo(temp.value.toString()) < 0; j -= gap){
+                            entryList.set(entryList.get(j - gap), j);
+                        }
+                    }
+                }
+                entryList.set(temp, j);
+            }
+        }
+    }
+
+    //insertion sort
+    public void insertionSort(boolean sortByKey, boolean ascending){
+        int n = entryList.size();
+        for(int i = 1; i < n; ++i){
+            Entry<K, V> key = entryList.get(i);
+            int j = i - 1;
+            if(sortByKey){
+                if(ascending){
+                    while(j >= 0 && entryList.get(j).getKey().toString().compareTo(key.getKey().toString()) > 0){
+                        entryList.set(entryList.get(j), j + 1);
+                        j = j - 1;
+                    }
+                }else{
+                    while(j >= 0 && entryList.get(j).getKey().toString().compareTo(key.getKey().toString()) < 0){
+                        entryList.set(entryList.get(j), j + 1);
+                        j = j - 1;
+                    }
+                }
+            }else{
+                if(ascending){
+                    while(j >= 0 && entryList.get(j).value.toString().compareTo(key.value.toString()) > 0){
+                        entryList.set(entryList.get(j), j + 1);
+                        j = j - 1;
+                    }
+                }else{
+                    while(j >= 0 && entryList.get(j).value.toString().compareTo(key.value.toString()) < 0){
+                        entryList.set(entryList.get(j), j + 1);
+                        j = j - 1;
+                    }
+                }
+            }
+            entryList.set(key, j + 1);
+        }
+    }
+
+    //bubblesort
+    private void bubbleSort(boolean sortByKey, boolean ascending){
+        int n = entryList.size();
+        for(int i = 0; i < n - 1; i++){
+            for(int j = 0; j < n - i - 1; j++){
+                if(sortByKey){
+                    if(ascending){
+                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) > 0){
+                            Entry<K, V> temp = entryList.get(j);
+                            entryList.set(entryList.get(j + 1), j);
+                            entryList.set(temp, j + 1);
+                        }
+                    }else{
+                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) < 0){
+                            Entry<K, V> temp = entryList.get(j);
+                            entryList.set(entryList.get(j + 1), j);
+                            entryList.set(temp, j + 1);
+                        }
+                    }
+                }else{
+                    if(ascending){
+                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) > 0){
+                            Entry<K, V> temp = entryList.get(j);
+                            entryList.set(entryList.get(j + 1), j);
+                            entryList.set(temp, j + 1);
+                        }
+                    }else{
+                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) < 0){
+                            Entry<K, V> temp = entryList.get(j);
+                            entryList.set(entryList.get(j + 1), j);
+                            entryList.set(temp, j + 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    public boolean checkIfSorted(boolean sortByKey){
+        if(sortByKey){
+            for(int i=0;i<entryList.size()-1;i++){
+                if(entryList.get(i).getKey().toString().compareTo(entryList.get(i+1).getKey().toString())>0){
+                    return false;
+                }
+            }
+            return true;
+        }
+        for(int i=0;i<entryList.size()-1;i++){
+            if(entryList.get(i).value.toString().compareTo(entryList.get(i+1).value.toString())>0){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Entry<K, V> getEntry (int index){
+        return entryList.get(index);
     }
 }
