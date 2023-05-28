@@ -1,3 +1,4 @@
+
 package org.example.LinkedHashMap;
 
 import org.example.Hashmap.Entry;
@@ -91,9 +92,6 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                 break;
             case insertionSort:
                 insertionSort(sortByKey, ascending);
-                break;
-            case bubbleSort:
-                bubbleSort(sortByKey, ascending);
                 break;
             default:
                 System.out.println("Invalid sorting algorithm");
@@ -303,45 +301,6 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
             entryList.set(key, j + 1);
         }
     }
-
-    //bubblesort
-    private void bubbleSort(boolean sortByKey, boolean ascending){
-        int n = entryList.size();
-        for(int i = 0; i < n - 1; i++){
-            for(int j = 0; j < n - i - 1; j++){
-                if(sortByKey){
-                    if(ascending){
-                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) > 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }else{
-                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) < 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }
-                }else{
-                    if(ascending){
-                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) > 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }else{
-                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) < 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
     public boolean checkIfSorted(boolean sortByKey){
         if(sortByKey){

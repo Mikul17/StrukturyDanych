@@ -1,10 +1,17 @@
 package com.mikul17.dataStructures;
 
 import org.example.LinkedList;
+import org.example.SortingAlgorithm;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LinkedListTest {
+    LinkedList<Integer> quickSort=new LinkedList<>();
+    LinkedList<Integer> mergeSort=new LinkedList<>();
+    LinkedList<Integer> shellSort=new LinkedList<>();
+    LinkedList<Integer> insertionSort=new LinkedList<>();
+    
 
     //Testing methods for adding elements to the list
     @Test
@@ -129,10 +136,58 @@ public class LinkedListTest {
         assertEquals(0, list.size());
     }
 
+    @Before
+    public void setUpSorting(){
+        Integer[] values={7, 1, 3, 4, 5, 6};
 
+        for(int i=0; i<values.length; i++){
+            quickSort.addLast(values[i]);
+            mergeSort.addLast(values[i]);
+            shellSort.addLast(values[i]);
+            insertionSort.addLast(values[i]);
+        }
+    }
 
+   
+    @Test
+    public void testSortingAlgorithmsByValueAscending(){
+        quickSort.sort(SortingAlgorithm.quickSort,true);
+        mergeSort.sort(SortingAlgorithm.mergeSort,true);
+        shellSort.sort(SortingAlgorithm.shellSort, true);
+        insertionSort.sort(SortingAlgorithm.insertionSort, true);
+       
 
+        assertEquals(1, (int)quickSort.get(0));
+        assertEquals(1, (int)mergeSort.get(0));
+        assertEquals(1, (int)shellSort.get(0));
+        assertEquals(1, (int)insertionSort.get(0));
+        
 
+        assertEquals(7, (int)quickSort.get(quickSort.size()-1));
+        assertEquals(7, (int)mergeSort.get(mergeSort.size()-1));
+        assertEquals(7, (int)shellSort.get(shellSort.size()-1));
+        assertEquals(7, (int)insertionSort.get(insertionSort.size()-1));
+        
+    }
 
+    @Test
+    public void testSortingAlgorithmsByValueDescending(){
+        quickSort.sort(SortingAlgorithm.quickSort, false);
+        mergeSort.sort(SortingAlgorithm.mergeSort, false);
+        shellSort.sort(SortingAlgorithm.shellSort, false);
+        insertionSort.sort(SortingAlgorithm.insertionSort,false);
+        
 
+        assertEquals(7, (int)quickSort.get(0));
+        assertEquals(7, (int)mergeSort.get(0));
+        assertEquals(7, (int)shellSort.get(0));
+        assertEquals(7, (int)insertionSort.get(0));
+        
+
+        assertEquals(1, (int)quickSort.get(quickSort.size()-1));
+        assertEquals(1, (int)mergeSort.get(mergeSort.size()-1));
+        assertEquals(1, (int)shellSort.get(shellSort.size()-1));
+        assertEquals(1, (int)insertionSort.get(insertionSort.size()-1));
+        
+    }
 }

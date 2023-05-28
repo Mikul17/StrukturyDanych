@@ -32,6 +32,6 @@ public class Main {
         for(int i = 0; i < randomStrings.length; i++){
             hashmap.put(randomStrings[i], randomNumbers[i]);
         }
-        hashmap.print();
+        //hashmap.print();
     };
 }
