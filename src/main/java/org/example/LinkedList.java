@@ -1,6 +1,5 @@
 package org.example;
 
-
 public class LinkedList <T>{
     private class Node{
         private T data;
@@ -16,10 +15,8 @@ public class LinkedList <T>{
     private Node head;
     private Node tail;
     private int size;
-    private final LinkedList<T> list;
 
     public LinkedList(){
-        list = new LinkedList<>();
         this.head = null;
         this.tail = null;
         this.size = 0;
@@ -72,9 +69,19 @@ public class LinkedList <T>{
         }
     }
 
-    public void addAll(LinkedList<T> list){
-        for(int i = 0; i < list.size(); i++){
-            addLast(list.removeFirst());
+    public void addAll(LinkedList<T> list, boolean ascending){
+        int size = list.size();
+        if(ascending){
+             for(int i = 0; i < size; i++){
+                 addLast(list.getFirst());
+                list.removeFirst();
+                }
+        }
+        else{
+            for(int i = 0; i < size; i++){
+                addLast(list.getLast());
+               list.removeLast();
+               }   
         }
     }
 
@@ -101,6 +108,18 @@ public class LinkedList <T>{
         }
         return current.data;
     }
+
+    public T getT(int index){
+        if (index < 0 || index >= size){
+            return null;
+        }
+        Node current = tail;
+        for (int i = 0; i < index; i++){
+            current = current.prev;
+        }
+        return current.data;
+    }
+
     public T get(T element){
         Node current = head;
         while (current != null){
@@ -114,9 +133,8 @@ public class LinkedList <T>{
 
     //Removing elements from the list
 
-    public T removeFirst(){
+    public void removeFirst(){
         if (head == null){
-            return null;
         }
         if (head == tail){
             head = null;
@@ -126,11 +144,9 @@ public class LinkedList <T>{
             head.prev = null;
         }
         size--;
-        return head.data;
     }
-    public T removeLast(){
+    public void removeLast(){
         if (head == null){
-            return null;
         }
         if (head == tail){
             head = null;
@@ -140,7 +156,6 @@ public class LinkedList <T>{
             tail.next = null;
         }
         size--;
-        return tail.data;
     }
     public void remove(T element){
         Node current = head;
@@ -213,13 +228,13 @@ public class LinkedList <T>{
     }
 
      //Sorting algorithms
-     public void sort(SortingAlgorithm algorithm, boolean ascending){
+     public void sort(SortingAlgorithm algorithm,LinkedList<T> list, boolean ascending){
         switch(algorithm){
             case quickSort:
                 quicksort(list, ascending);
                 break;
             case mergeSort:
-                mergeSort(list, ascending);
+                mergeSort(list, ascending); //ascending);
                 break;
             case shellSort:
                 shellSort(list, ascending);
@@ -240,7 +255,8 @@ public class LinkedList <T>{
         }
         
         // Choose the pivot element (last element in the list)
-        T pivot = list.removeLast();
+        T pivot = list.getLast();
+        list.removeLast();
         
         // Create two new linked lists to hold elements smaller and greater than the pivot
         LinkedList<T> smallerList = new LinkedList<>();
@@ -248,8 +264,9 @@ public class LinkedList <T>{
         
         // Iterate through the list and partition elements based on the pivot
         while (!list.isEmpty()) {
-            T current = list.removeFirst();
-            if(!ascending){
+            T current = list.getFirst();
+            list.removeFirst();
+            if(ascending){
             if (current.toString().compareTo(pivot.toString()) < 0) {
                 smallerList.addLast(current);
             } else {
@@ -266,18 +283,21 @@ public class LinkedList <T>{
         }
         
         // Recursively sort the smaller and greater lists
-        quicksort(smallerList, ascending);
-        quicksort(greaterList, ascending);
+        if(checkIfSorted(smallerList)==false){
+        quicksort(smallerList, ascending);}
+        if(checkIfSorted(greaterList)==false){
+        quicksort(greaterList, ascending);}
         
         // Merge the smaller list, pivot, and greater list back into the original list
-        list.addAll(smallerList);
+        list.clear();
+        list.addAll(smallerList,ascending);
         list.addLast(pivot);
-        list.addAll(greaterList);
+        list.addAll(greaterList, ascending);
     }
     
 
-    //mergesort
-    public void mergeSort(LinkedList<T> list, boolean ascending) {
+     //mergesort
+     public void mergeSort(LinkedList<T> list, boolean ascending) {
         if (list == null || list.size() <= 1) {
             return;
         }
@@ -287,10 +307,12 @@ public class LinkedList <T>{
         LinkedList<T> right = new LinkedList<>();
 
         for (int i = 0; i < mid; i++) {
-            left.addLast(list.removeFirst());
+            left.addLast(list.getFirst());
+            list.removeFirst();
         }
         while (!list.isEmpty()) {
-            right.addLast(list.removeFirst());
+            right.addLast(list.getFirst());
+            list.removeFirst();
         }
 
         mergeSort(left, ascending);
@@ -391,7 +413,7 @@ public class LinkedList <T>{
         }
     }
 
-    public boolean checkIfSorted(){
+    public boolean checkIfSorted(LinkedList<T> list){
         for(int i=0;i<list.size()-1;i++){
             if(list.get(i).toString().compareTo(list.get(i+1).toString())>0){
                 return false;
