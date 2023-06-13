@@ -3,7 +3,7 @@ package org.example.Hashmap;
 
 import org.example.Map;
 
-public class Hashmap<K,V> implements Map<K,V> {
+public class Hashmap<K extends Comparable<K>, V extends Comparable<V>> implements Map<K,V> {
     //variables
     private Entry<K,V>[] hashMap;
     private float LOAD_FACTOR = 0.75f;
@@ -161,6 +161,13 @@ public class Hashmap<K,V> implements Map<K,V> {
         }
     }
 
+    private int compareKeys (K key1, K key2){
+        return key1.compareTo(key2);
+    }
+    private int compareValues(V value1, V value2){
+        return value1.compareTo(value2);
+    }
+
     //utility methods
     public void display(){
         for (Entry<K, V> kvEntry : hashMap) {
@@ -200,28 +207,34 @@ public class Hashmap<K,V> implements Map<K,V> {
         }
         return false;
     }
+    public void clear(){
+        hashMap = new Entry[capacity];
+        size = 0;
+    }
 
     //Hash functions
-//    public int hashCode(K key){
+//    public int hashCode(K key){ //3rd hash algorithm - test (default Java's hashCode algorithm)
 //       return Math.abs(key.hashCode());
 //    }
 
-    public int hashCode(K key) {
-        final int prime = 16777619;
-        int hash = 2147483647;
+//    public int hashCode(K key) { // 2nd hash algorithm (bitwise XOR shift with prime number multiplication)
+//        final int prime = 16777619;
+//        int hash = 2147483647;
+//
+//        byte[] keyBytes = key.toString().getBytes();
+//        for (byte b : keyBytes) {
+//            hash ^= b;
+//            hash *= prime;
+//        }
+//        return Math.abs(hash);
+//    }
 
-        byte[] keyBytes = key.toString().getBytes();
-        for (byte b : keyBytes) {
-            hash ^= b;
-            hash *= prime;
-        }
-        return Math.abs(hash);
+
+    public int hashCode (K key) { // 1st hash algorithm (bitwise XOR shift)
+        int hash;
+        return key == null ? 0 : Math.abs((hash = key.hashCode()) ^ (hash >>> 16));
     }
 
 
-//    public int hashCode (K key) {
-//        int hash;
-//        return key == null ? 0 : Math.abs((hash = key.hashCode()) ^ (hash >>> 16));
-//    }
 }
 

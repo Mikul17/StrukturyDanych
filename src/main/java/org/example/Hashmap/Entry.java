@@ -3,11 +3,10 @@ package org.example.Hashmap;
 
 import java.util.Objects;
 
-public class Entry <K, V>{
+public class Entry <K extends Comparable<K>, V extends Comparable<V>> implements Comparable<Entry<K, V>> {
     private final K key;
     public V value;
     public Entry<K,V> next;
-
 
 
     public Entry(K key, V value){
@@ -26,8 +25,13 @@ public class Entry <K, V>{
         return key;
     }
 
+    public int compareKeys(K key){
+        return this.key.compareTo(key);
+    }
 
-
+    public int compareValues(V value){
+        return this.value.compareTo(value);
+    }
 
     @Override
     public boolean equals (Object o) {
@@ -37,4 +41,8 @@ public class Entry <K, V>{
         return Objects.equals(key, entry.key) && Objects.equals(value, entry.value) && Objects.equals(next, entry.next);
     }
 
+    @Override
+    public int compareTo (Entry<K, V> o) {
+        return this.value.compareTo(o.value);
+    }
 }

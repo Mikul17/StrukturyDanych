@@ -7,8 +7,13 @@ import static org.junit.Assert.*;
 
 public class HashmapTest {
     Hashmap<String, Integer> map;
-    static class TestClass {
+    static class TestClass implements Comparable<TestClass> {
         public TestClass() {
+        }
+
+        @Override
+        public int compareTo (TestClass o) {
+            return 0;
         }
     }
 

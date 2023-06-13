@@ -4,6 +4,9 @@ import org.example.LinkedHashMap.LinkedHashMap;
 import org.example.SortingAlgorithm;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 public class LinkedHashMapTest {
@@ -12,9 +15,14 @@ public class LinkedHashMapTest {
     LinkedHashMap<String,Integer> mergeSortMap=new LinkedHashMap<>();
     LinkedHashMap<String,Integer> shellSortMap=new LinkedHashMap<>();
     LinkedHashMap<String,Integer> insertionSortMap=new LinkedHashMap<>();
-    LinkedHashMap<String,Integer> bubbleSortMap=new LinkedHashMap<>();
-    static class TestClass {
+    LinkedHashMap<String, Double> sortingDoubleMap=new LinkedHashMap<>();
+    static class TestClass implements Comparable<TestClass> {
         public TestClass() {
+        }
+
+        @Override
+        public int compareTo (TestClass o) {
+            return 0;
         }
     }
 
@@ -155,7 +163,6 @@ public class LinkedHashMapTest {
             mergeSortMap.put(keys[i], values[i]);
             shellSortMap.put(keys[i], values[i]);
             insertionSortMap.put(keys[i], values[i]);
-            bubbleSortMap.put(keys[i], values[i]);
         }
     }
     @Test
@@ -164,19 +171,16 @@ public class LinkedHashMapTest {
         mergeSortMap.sort(SortingAlgorithm.mergeSort, true,true);
         shellSortMap.sort(SortingAlgorithm.shellSort, true,true);
         insertionSortMap.sort(SortingAlgorithm.insertionSort, true,true);
-        bubbleSortMap.sort(SortingAlgorithm.bubbleSort, true,true);
 
         assertEquals("a", quickSortMap.getEntry(0).getKey());
         assertEquals("a", mergeSortMap.getEntry(0).getKey());
         assertEquals("a", shellSortMap.getEntry(0).getKey());
         assertEquals("a", insertionSortMap.getEntry(0).getKey());
-        assertEquals("a", bubbleSortMap.getEntry(0).getKey());
 
         assertEquals("z", quickSortMap.getEntry(quickSortMap.size()-1).getKey());
         assertEquals("z", mergeSortMap.getEntry(mergeSortMap.size()-1).getKey());
         assertEquals("z", shellSortMap.getEntry(shellSortMap.size()-1).getKey());
         assertEquals("z", insertionSortMap.getEntry(insertionSortMap.size()-1).getKey());
-        assertEquals("z", bubbleSortMap.getEntry(bubbleSortMap.size()-1).getKey());
     }
     @Test
     public void testSortingAlgorithmsByValueAscending(){
@@ -184,19 +188,16 @@ public class LinkedHashMapTest {
         mergeSortMap.sort(SortingAlgorithm.mergeSort, false,true);
         shellSortMap.sort(SortingAlgorithm.shellSort, false,true);
         insertionSortMap.sort(SortingAlgorithm.insertionSort, false,true);
-        bubbleSortMap.sort(SortingAlgorithm.bubbleSort, false,true);
 
         assertEquals(1, (int)quickSortMap.getEntry(0).value);
         assertEquals(1, (int)mergeSortMap.getEntry(0).value);
         assertEquals(1, (int)shellSortMap.getEntry(0).value);
         assertEquals(1, (int)insertionSortMap.getEntry(0).value);
-        assertEquals(1, (int)bubbleSortMap.getEntry(0).value);
 
         assertEquals(7, (int)quickSortMap.getEntry(quickSortMap.size()-1).value);
         assertEquals(7, (int)mergeSortMap.getEntry(mergeSortMap.size()-1).value);
         assertEquals(7, (int)shellSortMap.getEntry(shellSortMap.size()-1).value);
         assertEquals(7, (int)insertionSortMap.getEntry(insertionSortMap.size()-1).value);
-        assertEquals(7, (int)bubbleSortMap.getEntry(bubbleSortMap.size()-1).value);
     }
     @Test
     public void testSortingAlgorithmsByKeyDescending(){
@@ -204,19 +205,16 @@ public class LinkedHashMapTest {
         mergeSortMap.sort(SortingAlgorithm.mergeSort, true,false);
         shellSortMap.sort(SortingAlgorithm.shellSort, true,false);
         insertionSortMap.sort(SortingAlgorithm.insertionSort, true,false);
-        bubbleSortMap.sort(SortingAlgorithm.bubbleSort, true,false);
 
         assertEquals("z", quickSortMap.getEntry(0).getKey());
         assertEquals("z", mergeSortMap.getEntry(0).getKey());
         assertEquals("z", shellSortMap.getEntry(0).getKey());
         assertEquals("z", insertionSortMap.getEntry(0).getKey());
-        assertEquals("z", bubbleSortMap.getEntry(0).getKey());
 
         assertEquals("a", quickSortMap.getEntry(quickSortMap.size()-1).getKey());
         assertEquals("a", mergeSortMap.getEntry(mergeSortMap.size()-1).getKey());
         assertEquals("a", shellSortMap.getEntry(shellSortMap.size()-1).getKey());
         assertEquals("a", insertionSortMap.getEntry(insertionSortMap.size()-1).getKey());
-        assertEquals("a", bubbleSortMap.getEntry(bubbleSortMap.size()-1).getKey());
     }
     @Test
     public void testSortingAlgorithmsByValueDescending(){
@@ -224,18 +222,49 @@ public class LinkedHashMapTest {
         mergeSortMap.sort(SortingAlgorithm.mergeSort, false,false);
         shellSortMap.sort(SortingAlgorithm.shellSort, false,false);
         insertionSortMap.sort(SortingAlgorithm.insertionSort, false,false);
-        bubbleSortMap.sort(SortingAlgorithm.bubbleSort, false,false);
 
         assertEquals(7, (int)quickSortMap.getEntry(0).value);
         assertEquals(7, (int)mergeSortMap.getEntry(0).value);
         assertEquals(7, (int)shellSortMap.getEntry(0).value);
         assertEquals(7, (int)insertionSortMap.getEntry(0).value);
-        assertEquals(7, (int)bubbleSortMap.getEntry(0).value);
 
         assertEquals(1, (int)quickSortMap.getEntry(quickSortMap.size()-1).value);
         assertEquals(1, (int)mergeSortMap.getEntry(mergeSortMap.size()-1).value);
         assertEquals(1, (int)shellSortMap.getEntry(shellSortMap.size()-1).value);
         assertEquals(1, (int)insertionSortMap.getEntry(insertionSortMap.size()-1).value);
-        assertEquals(1, (int)bubbleSortMap.getEntry(bubbleSortMap.size()-1).value);
+    }
+
+    @Test
+    public void testSortingAlgorithmsAscendingForDouble(){
+        SortingAlgorithm[] sortingAlgorithms={SortingAlgorithm.quickSort, SortingAlgorithm.mergeSort, SortingAlgorithm.shellSort, SortingAlgorithm.insertionSort};
+        String[] keys = {"a", "b", "c", "d", "e", "f"};
+        Double[] values = {2.0, 1.5, 17.3, 4.0, 0.2, 10.7};
+
+        for(SortingAlgorithm sort : sortingAlgorithms){
+            for(int i=0; i<keys.length; i++){
+                sortingDoubleMap.put(keys[i], values[i]);
+            }
+            sortingDoubleMap.sort(sort, false, true);
+            assertEquals(0.2, sortingDoubleMap.getEntry(0).value, 0.0);
+            assertEquals(17.3, sortingDoubleMap.getEntry(sortingDoubleMap.size()-1).value, 0.0);
+            sortingDoubleMap.clear();
+        }
+    }
+
+    @Test
+    public void testSortingAlgorithmsDescendingForDouble(){
+        SortingAlgorithm[] sortingAlgorithms={SortingAlgorithm.quickSort, SortingAlgorithm.mergeSort, SortingAlgorithm.shellSort, SortingAlgorithm.insertionSort};
+        String[] keys = {"a", "b", "c", "d", "e", "f"};
+        Double[] values = {2.0, 1.5, 17.3, 4.0, 0.2, 10.7};
+
+        for(SortingAlgorithm sort : sortingAlgorithms){
+            for(int i=0; i<keys.length; i++){
+                sortingDoubleMap.put(keys[i], values[i]);
+            }
+            sortingDoubleMap.sort(sort, false, false);
+            assertEquals(17.3, sortingDoubleMap.getEntry(0).value, 0.0);
+            assertEquals(0.2, sortingDoubleMap.getEntry(sortingDoubleMap.size()-1).value, 0.0);
+            sortingDoubleMap.clear();
+        }
     }
 }

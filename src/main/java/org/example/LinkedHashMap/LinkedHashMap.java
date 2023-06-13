@@ -6,7 +6,7 @@ import org.example.LinkedList;
 import org.example.Map;
 import org.example.SortingAlgorithm;
 
-public class LinkedHashMap<K, V> implements Map<K, V> {
+public class LinkedHashMap<K extends Comparable<K>, V extends Comparable<V>> implements Map<K, V> {
     private final int INITIAL_CAPACITY = 16;
     private final float LOAD_FACTOR = 0.75f;
     private final LinkedList<Entry<K, V>> entryList;
@@ -52,6 +52,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
         return map.get(key);
     }
 
+
     //Utility methods
     public void display() {
         map.display();
@@ -75,6 +76,14 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
     public boolean containsKey(K key){
         return map.containsKey(key);
     }
+    public void clear(){
+        map.clear();
+        entryList.clear();
+    }
+
+    public int getNumberOfHashCollisions(){
+        return map.getNumberOfHashCollisions();
+    }
 
 
     //Sorting algorithms
@@ -92,14 +101,10 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
             case insertionSort:
                 insertionSort(sortByKey, ascending);
                 break;
-            case bubbleSort:
-                bubbleSort(sortByKey, ascending);
-                break;
             default:
                 System.out.println("Invalid sorting algorithm");
         }
     }
-
 
     //quicksort
     public void quicksort(int low, int high, boolean sortByKey, boolean ascending){
@@ -117,7 +122,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
         if(ascending){
             if(sortByKey){
                 for(int j = low; j < high; j++){
-                    if(entryList.get(j).getKey().toString().compareTo(pivot.getKey().toString()) < 0){
+                    if(entryList.get(j).getKey().compareTo(pivot.getKey()) < 0){
                         i++;
                         Entry<K, V> temp = entryList.get(i);
                         entryList.set(entryList.get(j), i);
@@ -126,7 +131,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                 }
             }else{
                 for(int j = low; j < high; j++){
-                    if(entryList.get(j).value.toString().compareTo(pivot.value.toString()) < 0){
+                    if(entryList.get(j).value.compareTo(pivot.value) < 0){
                         i++;
                         Entry<K, V> temp = entryList.get(i);
                         entryList.set(entryList.get(j), i);
@@ -137,7 +142,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
         }else{
             if(sortByKey){
                 for(int j = low; j < high; j++){
-                    if(entryList.get(j).getKey().toString().compareTo(pivot.getKey().toString()) > 0){
+                    if(entryList.get(j).getKey().compareTo(pivot.getKey()) > 0){
                         i++;
                         Entry<K, V> temp = entryList.get(i);
                         entryList.set(entryList.get(j), i);
@@ -146,7 +151,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                 }
             }else{
                 for(int j = low; j < high; j++){
-                    if(entryList.get(j).value.toString().compareTo(pivot.value.toString()) > 0){
+                    if(entryList.get(j).value.compareTo(pivot.value) > 0){
                         i++;
                         Entry<K, V> temp = entryList.get(i);
                         entryList.set(entryList.get(j), i);
@@ -187,7 +192,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
         while (i < n1 && j < n2) {
             if (sortByKey) {
                 if (ascending) {
-                    if (L[i].getKey().toString().compareTo(R[j].getKey().toString()) <= 0) {
+                    if (L[i].getKey().compareTo(R[j].getKey()) <= 0) {
                         entryList.set(L[i],k);
                         i++;
                     } else {
@@ -195,7 +200,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                         j++;
                     }
                 } else {
-                    if (L[i].getKey().toString().compareTo(R[j].getKey().toString()) >= 0) {
+                    if (L[i].getKey().compareTo(R[j].getKey()) >= 0) {
                         entryList.set(L[i],k);
                         i++;
                     } else {
@@ -205,7 +210,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                 }
             } else {
                 if (ascending) {
-                    if (L[i].value.toString().compareTo(R[j].value.toString()) <= 0) {
+                    if (L[i].value.compareTo(R[j].value) <= 0) {
                         entryList.set(L[i],k);
                         i++;
                     } else {
@@ -213,7 +218,7 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                         j++;
                     }
                 } else {
-                    if (L[i].value.toString().compareTo(R[j].value.toString()) >= 0) {
+                    if (L[i].value.compareTo(R[j].value) >= 0) {
                         entryList.set(L[i],k);
                         i++;
                     } else {
@@ -245,21 +250,21 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
                 int j;
                 if(sortByKey){
                     if(ascending){
-                        for(j = i; j >= gap && entryList.get(j - gap).getKey().toString().compareTo(temp.getKey().toString()) > 0; j -= gap){
+                        for(j = i; j >= gap && entryList.get(j - gap).getKey().compareTo(temp.getKey()) > 0; j -= gap){
                             entryList.set(entryList.get(j - gap), j);
                         }
                     }else{
-                        for(j = i; j >= gap && entryList.get(j - gap).getKey().toString().compareTo(temp.getKey().toString()) < 0; j -= gap){
+                        for(j = i; j >= gap && entryList.get(j - gap).getKey().compareTo(temp.getKey()) < 0; j -= gap){
                             entryList.set(entryList.get(j - gap), j);
                         }
                     }
                 }else{
                     if(ascending){
-                        for(j = i; j >= gap && entryList.get(j - gap).value.toString().compareTo(temp.value.toString()) > 0; j -= gap){
+                        for(j = i; j >= gap && entryList.get(j - gap).value.compareTo(temp.value) > 0; j -= gap){
                             entryList.set(entryList.get(j - gap), j);
                         }
                     }else{
-                        for(j = i; j >= gap && entryList.get(j - gap).value.toString().compareTo(temp.value.toString()) < 0; j -= gap){
+                        for(j = i; j >= gap && entryList.get(j - gap).value.compareTo(temp.value) < 0; j -= gap){
                             entryList.set(entryList.get(j - gap), j);
                         }
                     }
@@ -277,24 +282,24 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
             int j = i - 1;
             if(sortByKey){
                 if(ascending){
-                    while(j >= 0 && entryList.get(j).getKey().toString().compareTo(key.getKey().toString()) > 0){
+                    while(j >= 0 && entryList.get(j).getKey().compareTo(key.getKey()) > 0){
                         entryList.set(entryList.get(j), j + 1);
                         j = j - 1;
                     }
                 }else{
-                    while(j >= 0 && entryList.get(j).getKey().toString().compareTo(key.getKey().toString()) < 0){
+                    while(j >= 0 && entryList.get(j).getKey().compareTo(key.getKey()) < 0){
                         entryList.set(entryList.get(j), j + 1);
                         j = j - 1;
                     }
                 }
             }else{
                 if(ascending){
-                    while(j >= 0 && entryList.get(j).value.toString().compareTo(key.value.toString()) > 0){
+                    while(j >= 0 && entryList.get(j).value.compareTo(key.value) > 0){
                         entryList.set(entryList.get(j), j + 1);
                         j = j - 1;
                     }
                 }else{
-                    while(j >= 0 && entryList.get(j).value.toString().compareTo(key.value.toString()) < 0){
+                    while(j >= 0 && entryList.get(j).value.compareTo(key.value) < 0){
                         entryList.set(entryList.get(j), j + 1);
                         j = j - 1;
                     }
@@ -304,57 +309,34 @@ public class LinkedHashMap<K, V> implements Map<K, V> {
         }
     }
 
-    //bubblesort
-    private void bubbleSort(boolean sortByKey, boolean ascending){
-        int n = entryList.size();
-        for(int i = 0; i < n - 1; i++){
-            for(int j = 0; j < n - i - 1; j++){
-                if(sortByKey){
-                    if(ascending){
-                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) > 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }else{
-                        if(entryList.get(j).getKey().toString().compareTo(entryList.get(j + 1).getKey().toString()) < 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }
-                }else{
-                    if(ascending){
-                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) > 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
-                    }else{
-                        if(entryList.get(j).value.toString().compareTo(entryList.get(j + 1).value.toString()) < 0){
-                            Entry<K, V> temp = entryList.get(j);
-                            entryList.set(entryList.get(j + 1), j);
-                            entryList.set(temp, j + 1);
-                        }
+    public boolean checkIfSorted(boolean sortByKey, boolean ascending){
+        if(ascending){
+            if(sortByKey){
+                for(int i=0;i<entryList.size()-1;i++){
+                    if(entryList.get(i).getKey().toString().compareTo(entryList.get(i+1).getKey().toString())>0){
+                        return false;
                     }
                 }
+                return true;
             }
-        }
-    }
-
-
-    public boolean checkIfSorted(boolean sortByKey){
-        if(sortByKey){
             for(int i=0;i<entryList.size()-1;i++){
-                if(entryList.get(i).getKey().toString().compareTo(entryList.get(i+1).getKey().toString())>0){
+                if(entryList.get(i).value.toString().compareTo(entryList.get(i+1).value.toString())>0){
                     return false;
                 }
             }
-            return true;
-        }
-        for(int i=0;i<entryList.size()-1;i++){
-            if(entryList.get(i).value.toString().compareTo(entryList.get(i+1).value.toString())>0){
-                return false;
+        }else{
+            if(sortByKey){
+                for(int i=0;i<entryList.size()-1;i++){
+                    if(entryList.get(i).getKey().toString().compareTo(entryList.get(i+1).getKey().toString())<0){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            for(int i=0;i<entryList.size()-1;i++){
+                if(entryList.get(i).value.toString().compareTo(entryList.get(i+1).value.toString())<0){
+                    return false;
+                }
             }
         }
         return true;
