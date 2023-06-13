@@ -1,37 +1,42 @@
 package org.example;
 
-import org.example.Hashmap.Hashmap;
+
+import org.example.LinkedHashMap.LinkedHashMap;
+
+import java.io.IOException;
+
+import static org.example.SortingAlgorithm.*;
 
 public class Main {
-
-    public static int[] generateRandomNumbers(int size){
-        int[] randomNumbers = new int[size];
-        for(int i = 0; i < size; i++){
-            randomNumbers[i] = (int) (Math.random() * 100);
+    public static void main (String[] args) throws IOException {
+        SortingAlgorithm[] sortingAlgorithms = {quickSort, mergeSort, shellSort};
+        LinkedHashMap<String,Integer> linkedHashMap=new LinkedHashMap<>();
+        LinkedList<Integer> sizes=new LinkedList<>();
+        int n=1;
+        for(int i=0;i<4;i++){
+             n = (int)Math.pow(10,i);
+             for(int j=1; j<=4; j++){
+                 sizes.addLast(n*25*j);
+             }
         }
-        return randomNumbers;
+
+        for(int i=0; i<sizes.size();i++){
+            GenerateData.putDataIntoHashmap(linkedHashMap,"data("+sizes.get(i)+").csv");
+            System.out.println("Number of hash collisions: "+linkedHashMap.getNumberOfHashCollisions()+"[dataset size = "+sizes.get(i)+"]");
+            linkedHashMap.clear();
+        }
+        System.out.println("-".repeat(50));
+        for(int i=0; i<sizes.size();i++){
+          for(SortingAlgorithm sortingAlgorithm : sortingAlgorithms){
+              GenerateData.putDataIntoHashmap(linkedHashMap, "data("+sizes.get(i)+").csv");
+              long startTime = System.currentTimeMillis();
+              linkedHashMap.sort(sortingAlgorithm,true,true);
+              long endTime = System.currentTimeMillis();
+              long duration = (endTime - startTime);
+              System.out.println("Time taken by "+sortingAlgorithm+" to sort "+sizes.get(i)+" elements is "+duration+" ms");
+              linkedHashMap.clear();
+          }
+            System.out.println("-".repeat(50));
+        }
     }
-
-    public static String[] generateRandomStrings(int size) {
-        String[] randomStrings = new String[size];
-        for (int i = 0; i < size; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < 8; j++) { // Generate an 8-character string
-                int randomChar = 'a' + (int) (Math.random() * 26); // Generate a random character between 'a' and 'z'
-                sb.append((char) randomChar);
-            }
-            randomStrings[i] = sb.toString();
-        }
-        return randomStrings;
-    }
-
-    public static void main (String[] args) throws Exception {
-        Hashmap<String, Integer> hashmap = new Hashmap();
-        String[] randomStrings = generateRandomStrings(100);
-        int[] randomNumbers = generateRandomNumbers(100);
-        for(int i = 0; i < randomStrings.length; i++){
-            hashmap.put(randomStrings[i], randomNumbers[i]);
-        }
-        hashmap.print();
-    };
 }
